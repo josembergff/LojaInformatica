@@ -8,6 +8,7 @@ namespace LojaInformatica.API.Dados.Configuracao
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Produto> builder)
         {
             builder.HasMany(produto => produto.Imagens);
+            builder.Ignore(produto => produto.Notifications);
         }
     }
 }

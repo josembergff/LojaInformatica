@@ -11,6 +11,7 @@ namespace LojaInformatica.API.Dados.Configuracao
             builder.HasKey(cliente => cliente.Id);
             builder.Property(cliente => cliente.Nome)
                 .IsRequired();
+            builder.Ignore(cliente => cliente.Notifications);
         }
     }
 }

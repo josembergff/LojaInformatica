@@ -43,8 +43,10 @@ namespace LojaInformatica.API.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Cliente cliente)
         {
-            if (!cliente.EstaValidoParaInsercao)
-                return BadRequest();
+            if (!cliente.EstaValidoParaInsercao())
+            {
+                return BadRequest(cliente.Notifications);
+            }
 
             _repositorio.Acrescentar(cliente);
             return CreatedAtRoute("ConsultarCliente", new
@@ -56,8 +58,10 @@ namespace LojaInformatica.API.Controllers
         [HttpPut()]
         public IActionResult Put([FromBody] Cliente cliente)
         {
-            if (cliente == null || !cliente.EstaValidoParaAtualizacao)
-                return BadRequest();
+            if (!cliente.EstaValidoParaAtualizacao())
+            {
+                return BadRequest(cliente.Notifications);
+            }
 
             if (!_repositorio.Clientes.ConstaNoBanco(cliente.Id))
                 return NotFound();
@@ -70,8 +74,11 @@ namespace LojaInformatica.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (id <= 0)
-                return BadRequest();
+            var cliente = new Cliente { Id = id };
+            if (!cliente.EstaValidoParaAtualizacao())
+            {
+                return BadRequest(cliente.Notifications);
+            }
 
             if (!_repositorio.Clientes.ConstaNoBanco(id))
                 return NotFound();

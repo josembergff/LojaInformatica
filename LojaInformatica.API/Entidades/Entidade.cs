@@ -1,13 +1,37 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson.Serialization.Attributes;
+using prmToolkit.NotificationPattern;
 
 namespace LojaInformatica.API.Entidades
 {
-    public abstract class Entidade
+    public abstract class Entidade : Notifiable
     {
         public int Id { get; set; }
-        internal virtual bool EstaValidoParaInsercao => Id == 0;
-        internal virtual bool EstaValidoParaAtualizacao => Id != 0;
+
+        internal virtual bool EstaValidoParaInsercao()
+        {
+            return Id == 0;
+        }
+        internal virtual bool EstaValidoParaAtualizacao()
+        {
+            return Id > 0;
+        }
+    }
+
+    public abstract class EntidadeCollection : Entidade
+    {
+        [BsonId]
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public string _id { get; set; }
+
+        [BsonDateTimeOptions]
+        public DateTime DataCadastro { get; set; }
+
+        [BsonDateTimeOptions]
+        public DateTime DataEdicao { get; set; }
+        public abstract string NomePlural();
     }
 
     public abstract class Entidade<TEntidade> : Entidade where TEntidade : Entidade

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LojaInformatica.API.Dados;
 using LojaInformatica.API.Filters;
 using LojaInformatica.API.IoC;
+using LojaInformatica.API.ObjetosDeValor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,12 @@ namespace LojaInformatica.API
             {
                 options.Filters.Add<UnitOfWorkFilter>();
                 options.Filters.Add<IQueryableIteratorFilter>();
+            });
+
+            services.Configure<Settings>(options =>
+            {
+                options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                options.Database = Configuration.GetSection("MongoConnection:Database").Value;
             });
         }
 
